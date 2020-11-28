@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Contract from './contracts/SimpleStorage.json';
+import Contract from './contracts/Advertisement.json';
 import getWeb3 from './getWeb3';
 
 import './App.css';
@@ -32,19 +32,6 @@ class App extends Component {
       );
       console.error(error);
     }
-  };
-
-  runExample = async () => {
-    const { accounts, contract } = this.state;
-
-    // Add 1+1
-    var x = await contract.methods.get().call({ from: accounts[0] });
-    console.log('App -> x', x);
-    await contract.methods.set(5).send({ from: accounts[0] });
-
-    // set 5
-    x = await contract.methods.get().call({ from: accounts[0] });
-    console.log('App -> x', x);
   };
 
   render() {
