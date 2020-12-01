@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import Contract from './contracts/Advertisement.json';
 import getWeb3 from './getWeb3';
 
+import Ads from './components/Ads';
+import ChangeAds from './components/ChangeAds';
+
 import './App.css';
 
 class App extends Component {
@@ -32,7 +35,10 @@ class App extends Component {
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
+      this.setState(
+        { web3, accounts, contract: instance },
+        this.setInitialState
+      );
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -42,20 +48,33 @@ class App extends Component {
     }
   };
 
+  setInitialState = async () => {
+    this.getAd();
+    this.getBalance();
+    this.getAdCount();
+    this.getCost();
+  };
+
   // get methods
 
   getCost = async () => {
     const { accounts, contract } = this.state;
     const result = await contract.methods.getCost().call({ from: accounts[0] });
     this.setState({ cost: result });
-    console.log('🚀 ~ file: App.js ~ line 51 ~ App ~ getCost= ~ cost', cost);
+    console.log(
+      '🚀 ~ file: App.js ~ line 51 ~ App ~ getCost= ~ cost',
+      this.state.cost
+    );
   };
 
   getAd = async () => {
     const { accounts, contract } = this.state;
     const result = await contract.methods.getAd().call({ from: accounts[0] });
     this.setState({ ad: result });
-    console.log('🚀 ~ file: App.js ~ line 58 ~ App ~ getAd= ~ ad', ad);
+    console.log(
+      '🚀 ~ file: App.js ~ line 58 ~ App ~ getAd= ~ ad',
+      this.state.ad
+    );
   };
 
   getAdCount = async () => {
@@ -66,7 +85,7 @@ class App extends Component {
     this.setState({ adCount: result });
     console.log(
       '🚀 ~ file: App.js ~ line 65 ~ App ~ getAdCount= ~ adCount',
-      adCount
+      this.state.adCount
     );
   };
 
@@ -78,7 +97,7 @@ class App extends Component {
     this.setState({ contractBalance: result });
     console.log(
       '🚀 ~ file: App.js ~ line 72 ~ App ~ getBalance= ~ contractBalance',
-      contractBalance
+      this.state.contractBalance
     );
   };
 
@@ -92,26 +111,25 @@ class App extends Component {
   };
 
   withdraw = async (amount) => {
-    if (amount >= this.state.contractBalance) return;
+    const { web3, accounts, contract, contractBalance } = this.state;
+    if (amount >= contractBalance) return;
     await contract.methods.withdraw(web3.toWei(amount, 'ether'));
     this.getBalance();
   };
 
   render() {
     if (!this.state.web3) {
-      console.log('🚀 ~ file: App.js ~ line 72 ~ App ~ getAd= ~ ad', ad);
-      console.log('🚀 ~ file: App.js ~ line 72 ~ App ~ getAd= ~ ad', ad);
-      console.log('🚀 ~ file: App.js ~ line 72 ~ App ~ getAd= ~ ad', ad);
-      console.log('🚀 ~ file: App.js ~ line 72 ~ App ~ getAd= ~ ad', ad);
-      console.log('🚀 ~ file: App.js ~ line 72 ~ App ~ getAd= ~ ad', ad);
-      console.log('🚀 ~ file: App.js ~ line 72 ~ App ~ getAd= ~ ad', ad);
-      console.log('🚀 ~ file: App.js ~ line 72 ~ App ~ getAd= ~ ad', ad);
-      console.log('🚀 ~ file: App.js ~ line 72 ~ App ~ getAd= ~ ad', ad);
-      console.log('🚀 ~ file: App.js ~ line 72 ~ App ~ getAd= ~ ad', ad);
-      console.log('🚀 ~ file: App.js ~ line 72 ~ App ~ getAd= ~ ad', ad);
       return <div>Loading Web3, accounts, and contract...</div>;
     }
-    return <h2>Every thing is ok, check your console.</h2>;
+    return (
+      <div className="container">
+        <div className="container2">
+          <ChangeAds />
+          <div className="manager">MANAGER</div>
+        </div>
+        <Ads ad={this.state.ad} />
+      </div>
+    );
   }
 }
 
