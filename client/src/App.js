@@ -16,6 +16,7 @@ class App extends Component {
     ad: {},
     contractBalance: 0,
     adCount: 1,
+    withdrawAmount: 0,
   };
   componentDidMount = async () => {
     try {
@@ -91,11 +92,11 @@ class App extends Component {
   };
 
   getBalance = async () => {
-    const { accounts, contract } = this.state;
+    const { web3, accounts, contract } = this.state;
     const result = await contract.methods
       .getBalanceOfContract()
       .call({ from: accounts[0] });
-    this.setState({ contractBalance: result });
+    this.setState({ contractBalance: web3.utils.fromWei(result, 'ether') });
     console.log(
       '🚀 ~ file: App.js ~ line 72 ~ App ~ getBalance= ~ contractBalance',
       this.state.contractBalance
@@ -105,12 +106,6 @@ class App extends Component {
   // interact methods
 
   changeAd = async (e, link, nameLink, value) => {
-    console.log(
-      '🚀 ~ file: App.js ~ line 108 ~ App ~ changeAd= ~ link, nameLink, value',
-      link,
-      nameLink,
-      value
-    );
     e.preventDefault();
     console.log('sono qua');
     const { web3, accounts, contract } = this.state;
@@ -138,7 +133,31 @@ class App extends Component {
       <div className="container">
         <div className="container2">
           <ChangeAds changeAd={this.changeAd} cost={this.state.cost} />
-          <div className="manager">MANAGER</div>
+          <div className="manager">
+            <p>
+              <h4>Current balance: {this.state.contractBalance} ETH</h4>
+              Do you want to withdraw?
+            </p>
+            <input
+              className="input-value"
+              type="number"
+              step="0.1"
+              min="0.1"
+              max={this.state.contractBalance}
+              id="amount"
+              value={this.state.withdrawAmount}
+              name="amount"
+              onChange={(e) =>
+                this.setState({ withdrawAmount: e.target.value })
+              }
+            ></input>
+            <button
+              className="btn withdraw"
+              onClick={() => this.withdraw(this.state.withdrawAmount)}
+            >
+              Withdraw
+            </button>
+          </div>
         </div>
         <Ads ad={this.state.ad} />
       </div>
