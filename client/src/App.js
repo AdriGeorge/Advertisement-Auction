@@ -58,9 +58,10 @@ class App extends Component {
   // get methods
 
   getCost = async () => {
-    const { accounts, contract } = this.state;
-    const result = await contract.methods.getCost().call({ from: accounts[0] });
-    this.setState({ cost: result });
+    const { web3, accounts, contract } = this.state;
+    var result = await contract.methods.getCost().call({ from: accounts[0] });
+    result = web3.utils.fromWei(result, 'ether');
+    this.setState({ cost: parseFloat(result) });
     console.log(
       '🚀 ~ file: App.js ~ line 51 ~ App ~ getCost= ~ cost',
       this.state.cost
@@ -103,17 +104,29 @@ class App extends Component {
 
   // interact methods
 
-  changeAd = async (link, nameLink, value) => {
-    const { accounts, contract } = this.state;
-    await contract.methods
-      .changeAd(link, nameLink)
-      .send({ from: accounts[0], value: value });
+  changeAd = async (e, link, nameLink, value) => {
+    console.log(
+      '🚀 ~ file: App.js ~ line 108 ~ App ~ changeAd= ~ link, nameLink, value',
+      link,
+      nameLink,
+      value
+    );
+    e.preventDefault();
+    console.log('sono qua');
+    const { web3, accounts, contract } = this.state;
+
+    await contract.methods.changeAd(link, nameLink).send({
+      from: accounts[0],
+      value: web3.utils.toWei(value, 'ether'),
+      gas: 1000000,
+    });
+    this.setInitialState();
   };
 
   withdraw = async (amount) => {
     const { web3, accounts, contract, contractBalance } = this.state;
     if (amount >= contractBalance) return;
-    await contract.methods.withdraw(web3.toWei(amount, 'ether'));
+    await contract.methods.withdraw(web3.utils.toWei(amount, 'ether'));
     this.getBalance();
   };
 
@@ -124,7 +137,7 @@ class App extends Component {
     return (
       <div className="container">
         <div className="container2">
-          <ChangeAds />
+          <ChangeAds changeAd={this.changeAd} cost={this.state.cost} />
           <div className="manager">MANAGER</div>
         </div>
         <Ads ad={this.state.ad} />

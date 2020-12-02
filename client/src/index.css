@@ -133,6 +133,7 @@ p {
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: var(--radius);
+  margin: 1em;
 }
 .btn:hover {
   color: var(--clr-primary-5);
@@ -231,4 +232,14 @@ button {
 .manager {
   background: rgb(167, 219, 187);
   padding: 1em;
+}
+
+.input {
+  width: 200px;
+  margin: 1em;
+}
+
+.input-value {
+  width: 100px;
+  margin: 1em;
 }
