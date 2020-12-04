@@ -57,11 +57,10 @@ const ChangeAds = ({ changeAd, cost }) => {
           ></input>
           <div className={classes.fileInput}>
             <FileBase
-              style="width:100%;"
               type="file"
               multiple={false}
               onDone={({ base64 }) => setImg(base64)}
-            ></FileBase>
+            />
           </div>
           <br />
           <Button

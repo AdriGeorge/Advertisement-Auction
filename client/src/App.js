@@ -17,6 +17,7 @@ class App extends Component {
     contractBalance: 0,
     adCount: 1,
     withdrawAmount: 0,
+    owner: null,
   };
   componentDidMount = async () => {
     try {
@@ -54,9 +55,19 @@ class App extends Component {
     this.getBalance();
     this.getAdCount();
     this.getCost();
+    this.getOwner();
   };
 
   // get methods
+
+  getOwner = async () => {
+    const { accounts, contract } = this.state;
+    const result = await contract.methods
+      .getOwner()
+      .call({ from: accounts[0] });
+    this.setState({ owner: result });
+    console.log(this.state.owner);
+  };
 
   getCost = async () => {
     const { web3, accounts, contract } = this.state;
@@ -136,31 +147,35 @@ class App extends Component {
       <div className="container">
         <div className="container2">
           <ChangeAds changeAd={this.changeAd} cost={this.state.cost} />
-          <div className="manager">
-            <p>
-              <h4>Current balance: {this.state.contractBalance} ETH</h4> Do you
-              want to withdraw?
-            </p>
-            <input
-              className="input-value"
-              type="number"
-              step="0.1"
-              min="0.1"
-              max={this.state.contractBalance}
-              id="amount"
-              value={this.state.withdrawAmount}
-              name="amount"
-              onChange={(e) =>
-                this.setState({ withdrawAmount: e.target.value })
-              }
-            ></input>
-            <button
-              className="btn withdraw"
-              onClick={() => this.withdraw(this.state.withdrawAmount)}
-            >
-              Withdraw
-            </button>
-          </div>
+          {this.state.owner === this.state.accounts[0] ? (
+            <div className="manager">
+              <p>
+                <h4>Current balance: {this.state.contractBalance} ETH</h4> How
+                much do you want to withdraw?
+              </p>
+              <input
+                className="input-withdraw"
+                type="number"
+                step="0.1"
+                min="0.1"
+                max={this.state.contractBalance}
+                id="amount"
+                value={this.state.withdrawAmount}
+                name="amount"
+                onChange={(e) =>
+                  this.setState({ withdrawAmount: e.target.value })
+                }
+              ></input>
+              <button
+                className="btn withdraw"
+                onClick={() => this.withdraw(this.state.withdrawAmount)}
+              >
+                Withdraw
+              </button>
+            </div>
+          ) : (
+            <p>ciao</p>
+          )}
         </div>
         <Ads ad={this.state.ad} />
       </div>

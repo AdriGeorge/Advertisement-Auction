@@ -36,6 +36,10 @@ contract Advertisement{
         adCost = msg.value;
     }
     
+    function getOwner() public view returns (address){
+        return owner;
+    }
+
     function getCost() public view returns (uint) {
         return adCost;
     }
