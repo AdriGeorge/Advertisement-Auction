@@ -247,6 +247,14 @@ button {
 }
 
 .input-value {
-  width: 100px;
-  margin: 1em;
+  width: 19.3rem;
+  border: solid 1px;
+  border-color: gray;
+}
+.prova {
+  width: 100%;
+}
+
+.element.style {
+  width: 100%;
 }

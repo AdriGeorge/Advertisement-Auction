@@ -121,7 +121,10 @@ class App extends Component {
   withdraw = async (amount) => {
     const { web3, accounts, contract, contractBalance } = this.state;
     if (amount >= contractBalance) return;
-    await contract.methods.withdraw(web3.utils.toWei(amount, 'ether'));
+    console.log('prima');
+    await contract.methods
+      .withdraw(web3.utils.toWei(amount, 'ether'))
+      .send({ from: accounts[0] });
     this.getBalance();
   };
 
@@ -135,8 +138,8 @@ class App extends Component {
           <ChangeAds changeAd={this.changeAd} cost={this.state.cost} />
           <div className="manager">
             <p>
-              <h4>Current balance: {this.state.contractBalance} ETH</h4>
-              Do you want to withdraw?
+              <h4>Current balance: {this.state.contractBalance} ETH</h4> Do you
+              want to withdraw?
             </p>
             <input
               className="input-value"
