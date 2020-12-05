@@ -7,6 +7,13 @@ import ChangeAds from './components/ChangeAds';
 
 import './App.css';
 
+const ipfsClient = require('ipfs-api');
+const ipfs = ipfsClient({
+  host: 'ipfs.infura.io',
+  port: 5001,
+  protocol: 'https',
+}); // leaving out the arguments will default to these values
+
 class App extends Component {
   state = {
     web3: null,
@@ -74,20 +81,12 @@ class App extends Component {
     var result = await contract.methods.getCost().call({ from: accounts[0] });
     result = web3.utils.fromWei(result, 'ether');
     this.setState({ cost: parseFloat(result) });
-    console.log(
-      '🚀 ~ file: App.js ~ line 51 ~ App ~ getCost= ~ cost',
-      this.state.cost
-    );
   };
 
   getAd = async () => {
     const { accounts, contract } = this.state;
     const result = await contract.methods.getAd().call({ from: accounts[0] });
     this.setState({ ad: result });
-    console.log(
-      '🚀 ~ file: App.js ~ line 58 ~ App ~ getAd= ~ ad',
-      this.state.ad
-    );
   };
 
   getAdCount = async () => {
@@ -96,10 +95,6 @@ class App extends Component {
       .getAdCount()
       .call({ from: accounts[0] });
     this.setState({ adCount: result });
-    console.log(
-      '🚀 ~ file: App.js ~ line 65 ~ App ~ getAdCount= ~ adCount',
-      this.state.adCount
-    );
   };
 
   getBalance = async () => {
@@ -108,28 +103,40 @@ class App extends Component {
       .getBalanceOfContract()
       .call({ from: accounts[0] });
     this.setState({ contractBalance: web3.utils.fromWei(result, 'ether') });
-    console.log(
-      '🚀 ~ file: App.js ~ line 72 ~ App ~ getBalance= ~ contractBalance',
-      this.state.contractBalance
-    );
   };
 
   // interact methods
 
   changeAd = async (e, link, nameLink, value, img) => {
     e.preventDefault();
-    console.log('sono qua');
+    console.log('sono in changeAd');
+    console.log(img);
     const { web3, accounts, contract } = this.state;
+    var imgHash;
+    console.log('prima di add');
 
-    // await contract.methods.changeAd(link, nameLink).send({
-    //   from: accounts[0],
-    //   value: web3.utils.toWei(value, 'ether'),
-    //   gas: 1000000,
-    // });
-    // this.setInitialState();
+    if (img) {
+      try {
+        const postResponse = await ipfs.add(img);
+        console.log('postResponse', postResponse);
+        imgHash = postResponse[0].hash;
+        await contract.methods.changeAd(link, nameLink, imgHash).send({
+          from: accounts[0],
+          value: web3.utils.toWei(value, 'ether'),
+          gas: 1000000,
+        });
+        this.setInitialState();
+      } catch (e) {
+        console.log('Error: ', e);
+      }
+    } else {
+      alert('No files submitted. Please try again.');
+      console.log('ERROR: No data to submit');
+    }
   };
 
   withdraw = async (amount) => {
+    console.log('sono in withdraw');
     const { web3, accounts, contract, contractBalance } = this.state;
     if (amount >= contractBalance) return;
     console.log('prima');
@@ -149,10 +156,8 @@ class App extends Component {
           <ChangeAds changeAd={this.changeAd} cost={this.state.cost} />
           {this.state.owner === this.state.accounts[0] ? (
             <div className="manager">
-              <p>
-                <h4>Current balance: {this.state.contractBalance} ETH</h4> How
-                much do you want to withdraw?
-              </p>
+              <h4>Current balance: {this.state.contractBalance} ETH</h4>
+              <p>How much do you want to withdraw?</p>
               <input
                 className="input-withdraw"
                 type="number"

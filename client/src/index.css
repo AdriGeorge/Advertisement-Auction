@@ -215,6 +215,7 @@ button {
   grid-gap: 1em;
   /*grid-auto-rows: 100px;*/
   grid-auto-rows: minmax(750px, auto);
+  max-height: 80%;
 }
 
 .container2 {
@@ -252,4 +253,11 @@ button {
 
 .input-withdraw {
   width: 5rem;
+}
+
+.img {
+  border-radius: 8px;
+  margin-top: 5%;
+  width: 50%;
+  height: 50%;
 }

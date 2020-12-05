@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
-import FileBase from 'react-file-base64';
 import useStyles from './style';
 
 const ChangeAds = ({ changeAd, cost }) => {
@@ -10,7 +9,7 @@ const ChangeAds = ({ changeAd, cost }) => {
   const [link, setLink] = useState('');
   const [nameLink, setNameLink] = useState('');
   const [value, setValue] = useState(cost + 0.1);
-  const [buffer, setBuffer] = useState(null);
+  const [img, setImg] = useState(null);
 
   const captureFile = (event) => {
     event.preventDefault();
@@ -18,13 +17,13 @@ const ChangeAds = ({ changeAd, cost }) => {
     const reader = new window.FileReader();
     reader.readAsArrayBuffer(file);
     reader.onloadend = () => {
-      setBuffer(Buffer(reader.result));
+      setImg(Buffer(reader.result));
     };
   };
 
   const changeAdAndReset = (e) => {
     e.preventDefault();
-    changeAd(e, link, nameLink, value);
+    changeAd(e, link, nameLink, value.toString(), img);
     setLink('');
     setNameLink('');
     setValue(cost + 0.2);
