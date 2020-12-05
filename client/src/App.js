@@ -144,6 +144,7 @@ class App extends Component {
       .withdraw(web3.utils.toWei(amount, 'ether'))
       .send({ from: accounts[0] });
     this.getBalance();
+    this.setState({ withdrawAmount: 0 });
   };
 
   render() {
