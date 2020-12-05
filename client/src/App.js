@@ -116,17 +116,17 @@ class App extends Component {
 
   // interact methods
 
-  changeAd = async (e, link, nameLink, value) => {
+  changeAd = async (e, link, nameLink, value, img) => {
     e.preventDefault();
     console.log('sono qua');
     const { web3, accounts, contract } = this.state;
 
-    await contract.methods.changeAd(link, nameLink).send({
-      from: accounts[0],
-      value: web3.utils.toWei(value, 'ether'),
-      gas: 1000000,
-    });
-    this.setInitialState();
+    // await contract.methods.changeAd(link, nameLink).send({
+    //   from: accounts[0],
+    //   value: web3.utils.toWei(value, 'ether'),
+    //   gas: 1000000,
+    // });
+    // this.setInitialState();
   };
 
   withdraw = async (amount) => {

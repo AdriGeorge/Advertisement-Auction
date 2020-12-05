@@ -10,7 +10,17 @@ const ChangeAds = ({ changeAd, cost }) => {
   const [link, setLink] = useState('');
   const [nameLink, setNameLink] = useState('');
   const [value, setValue] = useState(cost + 0.1);
-  const [img, setImg] = useState('');
+  const [buffer, setBuffer] = useState(null);
+
+  const captureFile = (event) => {
+    event.preventDefault();
+    const file = event.target.files[0];
+    const reader = new window.FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onloadend = () => {
+      setBuffer(Buffer(reader.result));
+    };
+  };
 
   const changeAdAndReset = (e) => {
     e.preventDefault();
@@ -56,10 +66,10 @@ const ChangeAds = ({ changeAd, cost }) => {
             onChange={(e) => setValue(e.target.value)}
           ></input>
           <div className={classes.fileInput}>
-            <FileBase
+            <input
               type="file"
               multiple={false}
-              onDone={({ base64 }) => setImg(base64)}
+              onChange={(e) => captureFile(e)}
             />
           </div>
           <br />

@@ -7,6 +7,7 @@ contract Advertisement{
         address adOwner;
         string link;
         string linkName;
+        string imgHash;
     }
     
     mapping(uint => Ad) public ads;
@@ -25,14 +26,14 @@ contract Advertisement{
         _;
     }
     
-    constructor(string memory _link, string memory _linkName) public {
+    constructor(string memory _link, string memory _linkName, string memory _imgHash) public {
         owner = msg.sender;
-        ads[adCount] = Ad(msg.sender, _link, _linkName);
+        ads[adCount] = Ad(msg.sender, _link, _linkName, _imgHash);
     }
     
-    function changeAd(string memory _link, string memory _linkName) public payable allowToChange(msg.value) {
+    function changeAd(string memory _link, string memory _linkName, string memory _imgHash) public payable allowToChange(msg.value) {
         adCount ++;
-        ads[adCount] = Ad(msg.sender, _link, _linkName);
+        ads[adCount] = Ad(msg.sender, _link, _linkName, _imgHash);
         adCost = msg.value;
     }
     
@@ -44,8 +45,8 @@ contract Advertisement{
         return adCost;
     }
     
-    function getAd() public view returns(address, string memory, string memory){
-        return (ads[adCount].adOwner, ads[adCount].link, ads[adCount].linkName);
+    function getAd() public view returns(address, string memory, string memory, string memory){
+        return (ads[adCount].adOwner, ads[adCount].link, ads[adCount].linkName, ads[adCount].imgHash);
     }
     
     function getBalanceOfContract() public view onlyOwner returns(uint){
