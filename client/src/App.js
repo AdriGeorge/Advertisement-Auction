@@ -109,11 +109,8 @@ class App extends Component {
 
   changeAd = async (e, link, nameLink, value, img) => {
     e.preventDefault();
-    console.log('sono in changeAd');
-    console.log(img);
     const { web3, accounts, contract } = this.state;
     var imgHash;
-    console.log('prima di add');
 
     if (img) {
       try {
@@ -136,10 +133,8 @@ class App extends Component {
   };
 
   withdraw = async (amount) => {
-    console.log('sono in withdraw');
     const { web3, accounts, contract, contractBalance } = this.state;
     if (amount >= contractBalance) return;
-    console.log('prima');
     await contract.methods
       .withdraw(web3.utils.toWei(amount, 'ether'))
       .send({ from: accounts[0] });

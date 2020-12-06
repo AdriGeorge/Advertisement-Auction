@@ -5,7 +5,6 @@ const Ads = (ad) => {
   const link = 'http://' + ad.ad[1];
   const linkName = ad.ad[2];
   const img = ad.ad[3];
-  console.log('sono in ads', img);
   return (
     <div className="ads">
       <ul>
