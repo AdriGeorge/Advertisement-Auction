@@ -175,7 +175,7 @@ class App extends Component {
               </button>
             </div>
           ) : (
-            <p>ciao</p>
+            <p className="no-admin">Set your Own Ads!</p>
           )}
         </div>
         <Ads ad={this.state.ad} />

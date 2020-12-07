@@ -214,7 +214,7 @@ button {
   grid-template-columns: 1fr 3fr;
   grid-gap: 1em;
   /*grid-auto-rows: 100px;*/
-  grid-auto-rows: minmax(700px, 400px);
+  grid-auto-rows: minmax(753px, 600px);
   max-height: 100%;
 }
 
@@ -237,7 +237,7 @@ button {
   vertical-align: middle;
   line-height: 100px;
   background: rgb(27, 5, 39);
-  min-height: 108%;
+  min-height: auto;
 }
 
 .manager {
@@ -261,4 +261,13 @@ button {
   margin-top: 5%;
   max-width: 70%;
   max-height: 50%;
+}
+
+.no-admin {
+  letter-spacing: var(--spacing);
+  text-transform: capitalize;
+  line-height: 1.25;
+  margin-top: 10%;
+  margin-left: 25%;
+  color: white;
 }
